@@ -1,0 +1,15 @@
+<h2>Карточка монеты</h2>
+<table>
+    <tr>
+        <th>ID Монеты</th>
+        <th>Название</th>
+        <th>Описание</th>
+        <th>Фото</th>
+    </tr>
+    <tr>
+        <td>{{ coin.id }}</td>
+        <td>{{ coin.name }}</td>
+        <td>{{ coin.description }}</td>
+        <td><img src="{{ coin.photo.url }}" alt="Фото монеты" style="max-width: 200px; max-height: 200px;"></td>
+    </tr>
+</table>

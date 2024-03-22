@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ваши коллекции</title>
+</head>
+<body>
+    <h1>Ваши коллекции</h1>
+    {% if user_collections %}
+        <ul>
+            {% for collection in user_collections %}
+                <li>{{ collection.name }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>У вас пока нет созданных коллекций.</p>
+    {% endif %}
+</body>
+</html>

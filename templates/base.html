@@ -3,10 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Title{% endblock %}</title>
+    <style>
+        .container {
+            display: flex;
+        }
+        .sidebar {
+            width: 15%;
+            padding: 20px;
+            background-color: #f2f2f2;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
-{% block content %}
+    <div class="container">
+        <div class="sidebar">
+            <a href="{% url 'index' %}" style="display: block;">Домашняя страница</a>
+            <a href="{% url 'login' %}" style="display: block;">Войти</a>
+            <a href="{% url 'logout' %}" style="display: block;">Выйти</a>
+            <a href="{% url 'get_coin' %}" style="display: block;">монеты</a>
+            <a href="{% url 'create_collection_view' %}" style="display: block;">создание коллекции</a>
+            <a href="{% url 'get_collection' %}" style="display: block;">коллекции</a>
+        </div>
+        <div class="content">
+            {% block content %}
 
-{% endblock %}
+            {% endblock %}
+        </div>
+    </div>
 </body>
 </html>

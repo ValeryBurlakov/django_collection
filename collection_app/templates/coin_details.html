@@ -1,0 +1,27 @@
+<!-- coin_details.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ coin.name }} - Детали монеты</title>
+</head>
+<body>
+    <h1>{{ coin.name }}</h1>
+    <p><strong>Название:</strong> {{ coin.name }}</p>
+    <p><strong>Описание:</strong> {{ coin.description }}</p>
+    <p><strong>Номинал:</strong> {{ coin.value }}</p>
+    <p><strong>Состояние:</strong> {{ coin.get_condition_display }}</p>
+    <p><strong>Дата добавления:</strong> {{ coin.added_date }}</p>
+
+    <img src="{{ coin.photo_obverse.url }}" alt="Фото аверса">
+    <img src="{{ coin.photo_reverse.url }}" alt="Фото реверса">
+
+    {% if coin.collection %}
+        <p><strong>Принадлежит коллекции:</strong> {{ coin.collection.name }}</p>
+    {% else %}
+        <p>Эта монета не принадлежит ни к какой коллекции.</p>
+    {% endif %}
+</body>
+</html>

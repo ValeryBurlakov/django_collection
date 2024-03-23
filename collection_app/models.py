@@ -14,12 +14,18 @@ from django.contrib.auth.models import User
 #         return self.username
 
 
+class Country(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Название страны')
+
+    def __str__(self):
+        return self.name
+
 class Collection(models.Model):
     name = models.CharField(max_length=100, verbose_name='название')
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        return f'{self.user}'
+        return f'{self.name}'
 
 
 class Coin(models.Model):
@@ -35,6 +41,8 @@ class Coin(models.Model):
     description = models.TextField(verbose_name='Описание')
     value = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='номинал')
     condition = models.CharField(max_length=20, choices=CONDITION_CHOICES, verbose_name='Состояние', default='Не определено')
+    country = models.ForeignKey(Country, on_delete=models.CASCADE, verbose_name='Страна', null=True, blank=True,
+                                default=None)
     added_date = models.DateField(auto_now_add=True, verbose_name='Дата добавления')
     photo_obverse = models.ImageField(upload_to='collection_app/coin_photos/', null=True, blank=True,
                               default='collection_app/coin_photos/default_image.jpg', verbose_name='фото аверс')

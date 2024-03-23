@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Монеты{% endblock %}
+
+{% block content %}
+<h1>{{ collection.name }}</h1>
+<form action="{% url 'delete_collection' collection.id %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Удалить коллекцию и все монеты">
+    <button class="add-coin-button"><a href="{% url 'add_coin' %}">Добавить монету</a></button>
+</form>
+    {% if collection_coins %}
+    <table>
+        <tr>
+            <th>Название</th>
+            <th>Номинал</th>
+            <th>Аверс</th>
+            <th>Реверс</th>
+        </tr>
+        {% for coin in collection_coins %}
+        <tr>
+            <td><a href="{% url 'coin_details' coin.id %}">{{ coin.name }}</a></td>
+            <td>{{ coin.value }}</td>
+            <td><img src="{{ coin.photo_obverse.url }}" width="100" height="100" alt="{{ coin.name }}"></td>
+            <td><img src="{{ coin.photo_reverse.url }}" width="100" height="100" alt="{{ coin.name }}"></td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>В этой коллекции пока нет монет.</p>
+    {% endif %}
+{% endblock %}
+
+
+

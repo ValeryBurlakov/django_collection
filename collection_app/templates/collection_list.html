@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Монеты{% endblock %}
+
+{% block content %}
+
+    <h1>Ваши коллекции</h1>
+    <form action="{% url 'create_collection_view' %}" method="get" style="display: inline;">
+        <input type="submit" value="Создать коллекцию">
+    </form>
+    {% if user_collections %}
+        <ul>
+            {% for collection in user_collections %}
+                <li>
+                    <a href="{% url 'collection_detail' collection.id %}">{{ collection.name }}</a>
+                    <form action="{% url 'delete_collection' collection.id %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="submit" value="Удалить">
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>У вас пока нет созданных коллекций.</p>
+    {% endif %}
+{% endblock %}

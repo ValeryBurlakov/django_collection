@@ -10,8 +10,10 @@ from django.contrib import messages
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 
+
 def index(request):
     return render(request, 'index.html')
+
 
 @login_required
 def get_users(request, client_id):
@@ -32,16 +34,13 @@ def get_users(request, client_id):
     """
     return HttpResponse(html)
 
+
 @login_required
 def logout_view(request):
     logout(request)
     return render(request, 'index.html')
 
 
-# @login_required
-# def get_coin(request, coin_id):
-#     coin = Coin.objects.get(id=coin_id)
-#     return render(request, 'get_coin.html', {'coin': coin})
 @login_required
 def get_coin(request):
     if request.method == 'POST':
@@ -55,14 +54,16 @@ def get_coin(request):
 
     return render(request, 'get_coin.html', {'form': form})
 
+
 def coin_details(request, coin_id):
     coin = Coin.objects.get(id=coin_id)
     return render(request, 'coin_details.html', {'coin': coin})
 
+
 @login_required
 def add_coin(request):
     if request.method == 'POST':
-        form = CoinForm(request.POST, request.FILES)
+        form = CoinForm(request.user, request.POST, request.FILES)
         if form.is_valid():
             coin = form.save(commit=False)
             if 'photo' in request.FILES and request.FILES['photo']:
@@ -70,11 +71,13 @@ def add_coin(request):
             else:
                 coin.photo = 'collection_app/coin_photos/default_image.jpg'
             coin.save()
-            return HttpResponse("success")
+            messages.success(request, 'Монета успешно добавлена')  # Display success message
+            return redirect('index')  # Redirect to the index page
         else:
-            return HttpResponse("invalid form")
+            messages.error(request, 'Ошибка добавления монеты')  # Display error message
+            return redirect('index')  # Redirect to the index page
     else:
-        form = CoinForm()
+        form = CoinForm(request.user)
     return render(request, "add_coin.html", {'form': form})
 
 
@@ -87,7 +90,7 @@ def create_collection_view(request):
             collection.user = request.user
             collection.save()
             messages.success(request, 'Collection created successfully!')
-            return HttpResponseRedirect(reverse('index'))  # Replace 'index' with the actual name of your index view
+            return HttpResponseRedirect(reverse('get_collection'))
     else:
         form = CollectionForm()
     return render(request, 'create_collection.html', {'form': form})
@@ -96,4 +99,21 @@ def create_collection_view(request):
 @login_required
 def get_collection(request):
     user_collections = Collection.objects.filter(user=request.user)
-    return render(request, 'get_collections.html', {'user_collections': user_collections})
+    return render(request, 'collection_list.html', {'user_collections': user_collections})
+
+
+@login_required
+def collection_detail(request, collection_id):
+    selected_collection = get_object_or_404(Collection, pk=collection_id, user=request.user)
+    collection_coins = Coin.objects.filter(collection=selected_collection)
+    return render(request, 'collection_detail.html', {'collection': selected_collection, 'collection_coins': collection_coins})
+
+
+@login_required
+def delete_collection(request, collection_id):
+    collection = get_object_or_404(Collection, pk=collection_id, user=request.user)
+    # Удаление всех монет, связанных с этой коллекцией
+    Coin.objects.filter(collection=collection).delete()
+    # Удаление самой коллекции
+    collection.delete()
+    return redirect('get_collection')

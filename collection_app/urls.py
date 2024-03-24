@@ -19,7 +19,7 @@ urlpatterns = [
     path('add_coin/', views.add_coin, name='add_coin'),
     path('collection/<int:collection_id>/', views.collection_detail, name='collection_detail'),
     path('collections/', views.get_collection, name='get_collection'),
-    path('delete_collection/<int:collection_id>/', views.delete_collection, name='delete_collection')
+    path('delete_collection/<int:collection_id>/', views.delete_collection, name='delete_collection'),
 ]
 
 if settings.DEBUG:

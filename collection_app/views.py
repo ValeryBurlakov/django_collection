@@ -1,5 +1,6 @@
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 
@@ -106,7 +107,8 @@ def get_collection(request):
 def collection_detail(request, collection_id):
     selected_collection = get_object_or_404(Collection, pk=collection_id, user=request.user)
     collection_coins = Coin.objects.filter(collection=selected_collection)
-    return render(request, 'collection_detail.html', {'collection': selected_collection, 'collection_coins': collection_coins})
+    total_value = Coin.objects.aggregate(Sum('price'))['price__sum']
+    return render(request, 'collection_detail.html', {'collection': selected_collection, 'collection_coins': collection_coins, 'total_value': total_value})
 
 
 @login_required
@@ -117,3 +119,16 @@ def delete_collection(request, collection_id):
     # Удаление самой коллекции
     collection.delete()
     return redirect('get_collection')
+
+
+def update_coin(request, coin_id):
+    coin = get_object_or_404(Coin, id=coin_id)
+    if request.method == 'POST':
+        form = CoinForm(request.user, request.POST, request.FILES, instance=coin)
+        if form.is_valid():
+            form.save()
+            return redirect('coins_list')
+    else:
+        form = CoinForm(request.user, instance=coin)
+
+    return render(request, 'update_coin.html', {'form': form})

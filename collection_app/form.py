@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Coin, Collection, Country
+from .models import Coin, Collection, Country, CoinState
 
 
 class CoinForm(forms.ModelForm):
@@ -9,9 +9,10 @@ class CoinForm(forms.ModelForm):
         self.fields['collection'].queryset = Collection.objects.filter(user=user)
         # self.fields['country'].queryset = Country.objects.all()
         self.fields['country'].queryset = Country.objects.order_by('name')
+        self.fields['coinstate'].queryset = CoinState.objects.order_by('name')
     class Meta:
         model = Coin
-        fields = ['name', 'description', 'value', 'condition', 'country', 'photo_obverse', 'photo_reverse', 'collection']
+        fields = ['name', 'description', 'value', 'year_coin', 'coinstate', 'country', 'price', 'photo_obverse', 'photo_reverse', 'collection']
 
 
 class GetCoinForm(forms.ModelForm):

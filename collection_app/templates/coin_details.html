@@ -10,11 +10,12 @@
 <body>
     <h1>{{ coin.name }}</h1>
     <p><strong>Название:</strong> {{ coin.name }}</p>
+    <p><strong>Год:</strong> {{ coin.year_coin }}</p>
     <p><strong>Описание:</strong> {{ coin.description }}</p>
     <p><strong>Номинал:</strong> {{ coin.value }}</p>
     <p><strong>Состояние:</strong> {{ coin.get_condition_display }}</p>
     <p><strong>Дата добавления:</strong> {{ coin.added_date }}</p>
-
+    <p><strong>Примерная стоимость:</strong> {{ coin.price }}</p>
     <img src="{{ coin.photo_obverse.url }}" alt="Фото аверса">
     <img src="{{ coin.photo_reverse.url }}" alt="Фото реверса">
 
